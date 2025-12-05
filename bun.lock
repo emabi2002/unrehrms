@@ -20,6 +20,7 @@
       "devDependencies": {
         "@biomejs/biome": "1.9.4",
         "@eslint/eslintrc": "^3.3.1",
+        "@netlify/plugin-nextjs": "^5.15.1",
         "@types/node": "^20.17.50",
         "@types/react": "^18.3.22",
         "@types/react-dom": "^18.3.7",
@@ -133,6 +134,8 @@
     "@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, "sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ=="],
 
     "@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.25", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.1.0", "@jridgewell/sourcemap-codec": "^1.4.14" } }, "sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ=="],
+
+    "@netlify/plugin-nextjs": ["@netlify/plugin-nextjs@5.15.1", "", {}, "sha512-HXm94tteOuA0FYwhkxjYIPe0zta+Dsu0wz7LnhfqVlaYcRaOLjHtd2vgfmpz3np/fx9TQg3gCfqGkXt2a9i7Aw=="],
 
     "@next/env": ["@next/env@15.3.2", "", {}, "sha512-xURk++7P7qR9JG1jJtLzPzf0qEvqCN0A/T3DXf8IPMKo9/6FfjxtEffRJIIew/bIL4T3C2jLLqBor8B/zVlx6g=="],
 
