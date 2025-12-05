@@ -1,6 +1,24 @@
 [build]
-  command = "npm run build"
+  command = "npm install && npm run build"
   publish = ".next"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
+[build.environment]
+  NODE_VERSION = "18"
+
+# Disable post-processing to prevent hangs
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = false
+  minify = false
+
+[build.processing.js]
+  bundle = false
+  minify = false
+
+[build.processing.html]
+  pretty_urls = false
+
+[build.processing.images]
+  compress = false
