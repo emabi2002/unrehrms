@@ -19,7 +19,9 @@ export default function Home() {
                 <p className="text-sm text-muted-foreground">HRMS & Payroll System</p>
               </div>
             </div>
-            <Button>Sign In</Button>
+            <Link href="/dashboard">
+              <Button>Dashboard</Button>
+            </Link>
           </div>
         </div>
       </header>
@@ -36,9 +38,11 @@ export default function Home() {
           Complete Human Resources Management and Payroll Solution for University Staff
         </p>
         <div className="flex gap-4 justify-center">
-          <Button size="lg" className="bg-primary hover:bg-primary/90">
-            Get Started
-          </Button>
+          <Link href="/dashboard">
+            <Button size="lg" className="bg-primary hover:bg-primary/90">
+              Open Dashboard
+            </Button>
+          </Link>
           <Button size="lg" variant="outline">
             Learn More
           </Button>
@@ -189,9 +193,11 @@ export default function Home() {
         <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
           Access your employee portal, apply for leave, check salary slips, and more.
         </p>
-        <Button size="lg" className="bg-primary hover:bg-primary/90">
-          Access Employee Portal
-        </Button>
+        <Link href="/dashboard">
+          <Button size="lg" className="bg-primary hover:bg-primary/90">
+            Access HRMS Dashboard
+          </Button>
+        </Link>
       </section>
 
       {/* Footer */}
