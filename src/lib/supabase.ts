@@ -34,6 +34,8 @@ export type Database = {
           description: string
           head_of_department: string | null
         }
+        Insert: Omit<Database['public']['Tables']['departments']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['departments']['Insert']>
       }
       leave_requests: {
         Row: {
@@ -46,6 +48,8 @@ export type Database = {
           status: 'pending' | 'approved' | 'rejected'
           created_at: string
         }
+        Insert: Omit<Database['public']['Tables']['leave_requests']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['leave_requests']['Insert']>
       }
       attendance: {
         Row: {
@@ -56,6 +60,8 @@ export type Database = {
           check_out: string | null
           status: 'present' | 'absent' | 'late' | 'half_day'
         }
+        Insert: Omit<Database['public']['Tables']['attendance']['Row'], 'id'>
+        Update: Partial<Database['public']['Tables']['attendance']['Insert']>
       }
       salary_slips: {
         Row: {
@@ -69,6 +75,8 @@ export type Database = {
           net_salary: number
           created_at: string
         }
+        Insert: Omit<Database['public']['Tables']['salary_slips']['Row'], 'id' | 'created_at'>
+        Update: Partial<Database['public']['Tables']['salary_slips']['Insert']>
       }
     }
   }

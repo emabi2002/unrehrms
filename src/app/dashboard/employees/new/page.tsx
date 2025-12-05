@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Save, Loader2 } from 'lucide-react'
-import { employeeService } from '@/lib/supabase-client'
+import { employeeService } from '@/lib/db-helpers'
 
 export default function NewEmployeePage() {
   const router = useRouter()

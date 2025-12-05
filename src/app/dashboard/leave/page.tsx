@@ -120,10 +120,12 @@ export default function LeavePage() {
                 <p className="text-xs text-muted-foreground">{pendingCount} pending requests</p>
               </div>
             </div>
-            <Button className="bg-blue-600 hover:bg-blue-700">
-              <Plus className="h-4 w-4 mr-2" />
-              New Leave Request
-            </Button>
+            <Link href="/dashboard/leave/new">
+              <Button className="bg-blue-600 hover:bg-blue-700">
+                <Plus className="h-4 w-4 mr-2" />
+                New Leave Request
+              </Button>
+            </Link>
           </div>
         </div>
       </header>

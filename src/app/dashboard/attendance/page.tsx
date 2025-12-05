@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ArrowLeft, Clock, CheckCircle, XCircle, Calendar, Download } from 'lucide-react'
-import { attendanceService } from '@/lib/supabase-client'
+import { attendanceService } from '@/lib/db-helpers'
 
 export default function AttendancePage() {
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])

@@ -1,64 +1,51 @@
-'use client'
-
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import type { Database } from './supabase'
-
-export const createClient = () => createClientComponentClient<Database>()
-
-// Helper functions for database operations
-export const supabaseClient = createClient()
+import { supabase } from './supabase'
 
 // Employee operations
 export const employeeService = {
   async getAll() {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('employees')
       .select('*')
       .order('created_at', { ascending: false })
-    return { data, error }
   },
 
   async getById(id: string) {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('employees')
       .select('*')
       .eq('id', id)
       .single()
-    return { data, error }
   },
 
-  async create(employee: Database['public']['Tables']['employees']['Insert']) {
-    const { data, error } = await supabaseClient
+  async create(employee: any) {
+    return await supabase
       .from('employees')
       .insert(employee)
       .select()
       .single()
-    return { data, error }
   },
 
-  async update(id: string, employee: Database['public']['Tables']['employees']['Update']) {
-    const { data, error } = await supabaseClient
+  async update(id: string, employee: any) {
+    return await supabase
       .from('employees')
       .update(employee)
       .eq('id', id)
       .select()
       .single()
-    return { data, error }
   },
 
   async delete(id: string) {
-    const { error } = await supabaseClient
+    return await supabase
       .from('employees')
       .delete()
       .eq('id', id)
-    return { error }
   }
 }
 
 // Leave request operations
 export const leaveService = {
   async getAll() {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('leave_requests')
       .select(`
         *,
@@ -70,33 +57,30 @@ export const leaveService = {
         )
       `)
       .order('created_at', { ascending: false })
-    return { data, error }
   },
 
-  async create(leave: Database['public']['Tables']['leave_requests']['Insert']) {
-    const { data, error } = await supabaseClient
+  async create(leave: any) {
+    return await supabase
       .from('leave_requests')
       .insert(leave)
       .select()
       .single()
-    return { data, error }
   },
 
   async updateStatus(id: string, status: 'approved' | 'rejected') {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('leave_requests')
       .update({ status })
       .eq('id', id)
       .select()
       .single()
-    return { data, error }
   }
 }
 
 // Attendance operations
 export const attendanceService = {
   async getAll(date?: string) {
-    let query = supabaseClient
+    let query = supabase
       .from('attendance')
       .select(`
         *,
@@ -113,15 +97,14 @@ export const attendanceService = {
       query = query.eq('date', date)
     }
 
-    const { data, error } = await query
-    return { data, error }
+    return await query
   },
 
   async checkIn(employeeId: string) {
     const today = new Date().toISOString().split('T')[0]
     const now = new Date().toISOString()
 
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('attendance')
       .insert({
         employee_id: employeeId,
@@ -131,13 +114,12 @@ export const attendanceService = {
       })
       .select()
       .single()
-    return { data, error }
   },
 
   async checkOut(attendanceId: string) {
     const now = new Date().toISOString()
 
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('attendance')
       .update({
         check_out: now
@@ -145,34 +127,31 @@ export const attendanceService = {
       .eq('id', attendanceId)
       .select()
       .single()
-    return { data, error }
   }
 }
 
 // Department operations
 export const departmentService = {
   async getAll() {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('departments')
       .select('*')
       .order('name', { ascending: true })
-    return { data, error }
   },
 
-  async create(department: Database['public']['Tables']['departments']['Insert']) {
-    const { data, error } = await supabaseClient
+  async create(department: any) {
+    return await supabase
       .from('departments')
       .insert(department)
       .select()
       .single()
-    return { data, error }
   }
 }
 
 // Salary slip operations
 export const salaryService = {
   async getAll() {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('salary_slips')
       .select(`
         *,
@@ -185,25 +164,22 @@ export const salaryService = {
       `)
       .order('year', { ascending: false })
       .order('month', { ascending: false })
-    return { data, error }
   },
 
   async getByEmployee(employeeId: string) {
-    const { data, error } = await supabaseClient
+    return await supabase
       .from('salary_slips')
       .select('*')
       .eq('employee_id', employeeId)
       .order('year', { ascending: false })
       .order('month', { ascending: false })
-    return { data, error }
   },
 
-  async create(salarySlip: Database['public']['Tables']['salary_slips']['Insert']) {
-    const { data, error } = await supabaseClient
+  async create(salarySlip: any) {
+    return await supabase
       .from('salary_slips')
       .insert(salarySlip)
       .select()
       .single()
-    return { data, error }
   }
 }
