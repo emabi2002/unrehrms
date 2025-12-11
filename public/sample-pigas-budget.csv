@@ -1,0 +1,21 @@
+Cost Centre Code,Cost Centre Name,Budget Line Code,Description,Original Amount,Actual Expenditure
+AGR,School of Agriculture,OP-TRAV,Operating - Travel & Accommodation,150000,45000
+AGR,School of Agriculture,OP-FUEL,Operating - Fuel & Vehicle Maintenance,80000,32000
+AGR,School of Agriculture,OP-STAT,Operating - Stationery & Supplies,45000,12000
+AGR,School of Agriculture,CAP-EQUIP,Capital - Equipment & Machinery,500000,150000
+FOR,School of Forestry,OP-TRAV,Operating - Travel & Accommodation,120000,38000
+FOR,School of Forestry,OP-FUEL,Operating - Fuel & Vehicle Maintenance,65000,28000
+FOR,School of Forestry,OP-MAINT,Operating - Maintenance & Repairs,90000,35000
+FOR,School of Forestry,CAP-VEHICLE,Capital - Vehicles,800000,0
+SCI,Faculty of Science,OP-TRAV,Operating - Travel & Accommodation,200000,75000
+SCI,Faculty of Science,OP-LAB,Operating - Laboratory Supplies,250000,120000
+SCI,Faculty of Science,CAP-IT,Capital - IT Equipment,400000,180000
+ADM,Administration,OP-STAT,Operating - Stationery & Office Supplies,100000,42000
+ADM,Administration,OP-UTIL,Operating - Utilities & Services,300000,125000
+ADM,Administration,CAP-FURN,Capital - Furniture & Fixtures,200000,85000
+LIB,Library Services,OP-BOOKS,Operating - Books & Periodicals,180000,95000
+LIB,Library Services,CAP-IT,Capital - IT Equipment,150000,60000
+NRS,School of Natural Resources,OP-TRAV,Operating - Travel & Field Work,175000,68000
+NRS,School of Natural Resources,OP-EQUIP,Operating - Field Equipment,85000,34000
+NRS,School of Natural Resources,CAP-RESEARCH,Capital - Research Equipment,450000,125000
+BUR,Bursary,OP-ADMIN,Operating - Administrative Costs,120000,48000
