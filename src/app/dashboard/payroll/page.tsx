@@ -1,169 +1,310 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
-import { Card } from '@/components/ui/card'
-import {
-  DollarSign,
-  Users,
-  FileText,
-  Calculator,
-  Building2,
-  TrendingUp
-} from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, DollarSign, Download, Send, FileText } from 'lucide-react'
 
 export default function PayrollPage() {
+  const [selectedMonth, setSelectedMonth] = useState('December')
+  const [selectedYear, setSelectedYear] = useState(2025)
+
+  const payrollData = [
+    {
+      id: '1',
+      employee_id: 'UNRE-2020-001',
+      employee_name: 'Dr. John Kila',
+      department: 'Faculty of Environmental Sciences',
+      basic_salary: 85000,
+      allowances: {
+        teaching: 12000,
+        research: 8000,
+        housing: 15000
+      },
+      deductions: {
+        tax: 18000,
+        nhis: 2000,
+        pension: 8500
+      },
+      net_salary: 91500
+    },
+    {
+      id: '2',
+      employee_id: 'UNRE-2021-045',
+      employee_name: 'Sarah Puka',
+      department: 'Administrative Services',
+      basic_salary: 55000,
+      allowances: {
+        transport: 5000,
+        housing: 10000,
+        meal: 3000
+      },
+      deductions: {
+        tax: 10000,
+        nhis: 1500,
+        pension: 5500
+      },
+      net_salary: 56000
+    },
+    {
+      id: '3',
+      employee_id: 'UNRE-2018-012',
+      employee_name: 'Prof. Mary Tone',
+      department: 'Faculty of Natural Resources',
+      basic_salary: 110000,
+      allowances: {
+        teaching: 15000,
+        research: 12000,
+        housing: 20000,
+        professional: 8000
+      },
+      deductions: {
+        tax: 25000,
+        nhis: 2500,
+        pension: 11000
+      },
+      net_salary: 126500
+    },
+    {
+      id: '4',
+      employee_id: 'UNRE-2022-078',
+      employee_name: 'David Kama',
+      department: 'IT Department',
+      basic_salary: 62000,
+      allowances: {
+        transport: 6000,
+        technical: 8000,
+        housing: 12000
+      },
+      deductions: {
+        tax: 12000,
+        nhis: 1800,
+        pension: 6200
+      },
+      net_salary: 68000
+    },
+    {
+      id: '5',
+      employee_id: 'UNRE-2019-034',
+      employee_name: 'Grace Namu',
+      department: 'Faculty of Agriculture',
+      basic_salary: 68000,
+      allowances: {
+        teaching: 10000,
+        research: 5000,
+        housing: 12000
+      },
+      deductions: {
+        tax: 14000,
+        nhis: 1900,
+        pension: 6800
+      },
+      net_salary: 72300
+    }
+  ]
+
+  const totalBasic = payrollData.reduce((sum, emp) => sum + emp.basic_salary, 0)
+  const totalAllowances = payrollData.reduce((sum, emp) =>
+    sum + Object.values(emp.allowances).reduce((a, b) => a + b, 0), 0)
+  const totalDeductions = payrollData.reduce((sum, emp) =>
+    sum + Object.values(emp.deductions).reduce((a, b) => a + b, 0), 0)
+  const totalNet = payrollData.reduce((sum, emp) => sum + emp.net_salary, 0)
+
+  const formatCurrency = (amount: number) => {
+    return `K${amount.toLocaleString('en-PG')}`
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div>
-        <h1 className="text-3xl font-bold">Payroll Management</h1>
-        <p className="text-gray-600 mt-2">
-          Complete payroll processing with PNG tax and superannuation
-        </p>
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className="p-6">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-teal-50">
+      <header className="border-b bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Total Employees</p>
-              <p className="text-3xl font-bold mt-1">-</p>
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Dashboard
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-emerald-600">Payroll Processing</h1>
+                <p className="text-xs text-muted-foreground">Salary and allowance management</p>
+              </div>
             </div>
-            <Users className="h-10 w-10 text-green-600 opacity-50" />
-          </div>
-        </Card>
-
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Current Period</p>
-              <p className="text-lg font-semibold mt-1">Not Started</p>
+            <div className="flex items-center gap-3">
+              <select
+                value={selectedMonth}
+                onChange={(e) => setSelectedMonth(e.target.value)}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option>January</option>
+                <option>February</option>
+                <option>March</option>
+                <option>April</option>
+                <option>May</option>
+                <option>June</option>
+                <option>July</option>
+                <option>August</option>
+                <option>September</option>
+                <option>October</option>
+                <option>November</option>
+                <option>December</option>
+              </select>
+              <select
+                value={selectedYear}
+                onChange={(e) => setSelectedYear(Number(e.target.value))}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                <option>2025</option>
+                <option>2024</option>
+                <option>2023</option>
+              </select>
             </div>
-            <FileText className="h-10 w-10 text-blue-600 opacity-50" />
           </div>
-        </Card>
+        </div>
+      </header>
 
-        <Card className="p-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-gray-600">Last Pay Run</p>
-              <p className="text-lg font-semibold mt-1">-</p>
+      <div className="container mx-auto px-4 py-8">
+        {/* Summary Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <Card className="border-l-4 border-l-blue-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Total Basic Salary</p>
+                <p className="text-2xl font-bold text-blue-600">{formatCurrency(totalBasic)}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-green-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Total Allowances</p>
+                <p className="text-2xl font-bold text-green-600">{formatCurrency(totalAllowances)}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-red-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Total Deductions</p>
+                <p className="text-2xl font-bold text-red-600">{formatCurrency(totalDeductions)}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-emerald-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Net Payroll</p>
+                <p className="text-2xl font-bold text-emerald-600">{formatCurrency(totalNet)}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Payroll Table */}
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <CardTitle>{selectedMonth} {selectedYear} Payroll</CardTitle>
+              <div className="flex gap-2">
+                <Button variant="outline" size="sm">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export
+                </Button>
+                <Button className="bg-emerald-600 hover:bg-emerald-700" size="sm">
+                  <Send className="h-4 w-4 mr-2" />
+                  Process Payments
+                </Button>
+              </div>
             </div>
-            <DollarSign className="h-10 w-10 text-purple-600 opacity-50" />
-          </div>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {payrollData.map((employee) => (
+                <Card key={employee.id} className="hover:shadow-md transition-shadow">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div>
+                        <h3 className="font-bold text-lg">{employee.employee_name}</h3>
+                        <p className="text-sm text-gray-600">{employee.department}</p>
+                        <p className="text-xs text-gray-500">ID: {employee.employee_id}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm text-gray-600 mb-1">Net Salary</p>
+                        <p className="text-2xl font-bold text-emerald-600">
+                          {formatCurrency(employee.net_salary)}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                      {/* Basic Salary */}
+                      <div className="p-3 bg-blue-50 rounded-lg">
+                        <p className="text-gray-600 mb-2 font-medium">Basic Salary</p>
+                        <p className="text-xl font-bold text-blue-600">
+                          {formatCurrency(employee.basic_salary)}
+                        </p>
+                      </div>
+
+                      {/* Allowances */}
+                      <div className="p-3 bg-green-50 rounded-lg">
+                        <p className="text-gray-600 mb-2 font-medium">Allowances</p>
+                        <div className="space-y-1">
+                          {Object.entries(employee.allowances).map(([key, value]) => (
+                            <div key={key} className="flex justify-between">
+                              <span className="text-gray-600 capitalize">{key}:</span>
+                              <span className="font-medium">{formatCurrency(value)}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="border-t mt-2 pt-2">
+                          <div className="flex justify-between font-bold text-green-600">
+                            <span>Total:</span>
+                            <span>{formatCurrency(Object.values(employee.allowances).reduce((a, b) => a + b, 0))}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Deductions */}
+                      <div className="p-3 bg-red-50 rounded-lg">
+                        <p className="text-gray-600 mb-2 font-medium">Deductions</p>
+                        <div className="space-y-1">
+                          {Object.entries(employee.deductions).map(([key, value]) => (
+                            <div key={key} className="flex justify-between">
+                              <span className="text-gray-600 capitalize">{key}:</span>
+                              <span className="font-medium">{formatCurrency(value)}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="border-t mt-2 pt-2">
+                          <div className="flex justify-between font-bold text-red-600">
+                            <span>Total:</span>
+                            <span>{formatCurrency(Object.values(employee.deductions).reduce((a, b) => a + b, 0))}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 mt-4 pt-4 border-t">
+                      <Button size="sm" variant="outline">
+                        <FileText className="h-4 w-4 mr-2" />
+                        View Salary Slip
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        Send via Email
+                      </Button>
+                      <Button size="sm" variant="outline">
+                        Download PDF
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
         </Card>
       </div>
-
-      {/* Setup Section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Payroll Setup</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link href="/dashboard/payroll/components">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-green-500">
-              <Calculator className="h-8 w-8 text-green-600 mb-3" />
-              <h3 className="font-semibold mb-2">Salary Components</h3>
-              <p className="text-sm text-gray-600">
-                Manage earnings and deductions
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/payroll/salary-structures">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-green-500">
-              <Building2 className="h-8 w-8 text-blue-600 mb-3" />
-              <h3 className="font-semibold mb-2">Salary Structures</h3>
-              <p className="text-sm text-gray-600">
-                Create position-based salary templates
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/payroll/employee-salaries">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-green-500">
-              <Users className="h-8 w-8 text-purple-600 mb-3" />
-              <h3 className="font-semibold mb-2">Employee Salaries</h3>
-              <p className="text-sm text-gray-600">
-                Assign salaries to employees
-              </p>
-            </Card>
-          </Link>
-        </div>
-      </div>
-
-      {/* Processing Section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Payroll Processing</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Link href="/dashboard/payroll/pay-periods">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-500">
-              <FileText className="h-8 w-8 text-green-600 mb-3" />
-              <h3 className="font-semibold mb-2">Pay Periods</h3>
-              <p className="text-sm text-gray-600">
-                Create monthly/fortnightly periods
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/payroll/pay-runs">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-500">
-              <TrendingUp className="h-8 w-8 text-blue-600 mb-3" />
-              <h3 className="font-semibold mb-2">Process Pay Runs</h3>
-              <p className="text-sm text-gray-600">
-                Generate payslips with tax & super
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/payroll/payslips">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-blue-500">
-              <DollarSign className="h-8 w-8 text-purple-600 mb-3" />
-              <h3 className="font-semibold mb-2">View Payslips</h3>
-              <p className="text-sm text-gray-600">
-                Access employee payslips
-              </p>
-            </Card>
-          </Link>
-        </div>
-      </div>
-
-      {/* Tax & Super Section */}
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Tax & Superannuation</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Link href="/dashboard/payroll/tax-calculator">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-purple-500">
-              <Calculator className="h-8 w-8 text-green-600 mb-3" />
-              <h3 className="font-semibold mb-2">PNG Tax Calculator</h3>
-              <p className="text-sm text-gray-600">
-                Test PNG graduated tax calculations
-              </p>
-            </Card>
-          </Link>
-
-          <Link href="/dashboard/payroll/super-schemes">
-            <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer border-2 border-transparent hover:border-purple-500">
-              <Building2 className="h-8 w-8 text-blue-600 mb-3" />
-              <h3 className="font-semibold mb-2">Super Schemes</h3>
-              <p className="text-sm text-gray-600">
-                Manage Nambawan & NASFUND
-              </p>
-            </Card>
-          </Link>
-        </div>
-      </div>
-
-      {/* Getting Started */}
-      <Card className="p-6 bg-green-50 border-green-200">
-        <h3 className="font-semibold text-green-900 mb-2">Getting Started</h3>
-        <ol className="text-sm text-green-800 space-y-2 ml-4 list-decimal">
-          <li>Set up <strong>Salary Components</strong> (earnings and deductions)</li>
-          <li>Create <strong>Salary Structures</strong> for different positions</li>
-          <li>Assign <strong>Employee Salaries</strong> using the structures</li>
-          <li>Create a <strong>Pay Period</strong> (monthly or fortnightly)</li>
-          <li>Process a <strong>Pay Run</strong> to generate payslips</li>
-          <li>Review and approve payslips</li>
-          <li>Export to bank for payment</li>
-        </ol>
-      </Card>
     </div>
   )
 }

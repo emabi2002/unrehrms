@@ -17,7 +17,7 @@ export const employeeService = {
       .single()
   },
 
-  async create(employee: Record<string, unknown>) {
+  async create(employee: any) {
     return await supabase
       .from('employees')
       .insert(employee)
@@ -25,7 +25,7 @@ export const employeeService = {
       .single()
   },
 
-  async update(id: string, employee: Record<string, unknown>) {
+  async update(id: string, employee: any) {
     return await supabase
       .from('employees')
       .update(employee)
@@ -59,7 +59,7 @@ export const leaveService = {
       .order('created_at', { ascending: false })
   },
 
-  async create(leave: Record<string, unknown>) {
+  async create(leave: any) {
     return await supabase
       .from('leave_requests')
       .insert(leave)
@@ -139,7 +139,7 @@ export const departmentService = {
       .order('name', { ascending: true })
   },
 
-  async create(department: Record<string, unknown>) {
+  async create(department: any) {
     return await supabase
       .from('departments')
       .insert(department)
@@ -175,7 +175,7 @@ export const salaryService = {
       .order('month', { ascending: false })
   },
 
-  async create(salarySlip: Record<string, unknown>) {
+  async create(salarySlip: any) {
     return await supabase
       .from('salary_slips')
       .insert(salarySlip)

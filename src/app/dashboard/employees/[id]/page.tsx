@@ -1,309 +1,390 @@
-'use client';
+'use client'
 
-import { useState, useEffect } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { createClient } from '@/lib/supabase';
+import { useState } from 'react'
+import Link from 'next/link'
+import { useParams } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   ArrowLeft,
+  Edit,
   Mail,
   Phone,
   MapPin,
   Briefcase,
   Calendar,
   DollarSign,
-  User,
-  Users,
   FileText,
-  AlertCircle,
-} from 'lucide-react';
-import toast from 'react-hot-toast';
+  Clock,
+  User,
+  Download
+} from 'lucide-react'
 
-interface Employee {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string | null;
-  employee_id: string;
-  department: string;
-  position: string;
-  employment_type: string;
-  hire_date: string;
-  salary: number;
-  status: string;
-  photo_url?: string;
-  national_id?: string;
-  passport_number?: string;
-  drivers_license?: string;
-}
+export default function EmployeeDetailPage() {
+  const params = useParams()
+  const [activeTab, setActiveTab] = useState('overview')
 
-export default function EmployeeProfilePage() {
-  const params = useParams();
-  const router = useRouter();
-  const employeeId = params?.id as string;
-  const supabase = createClient();
-
-  const [employee, setEmployee] = useState<Employee | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview');
-
-  useEffect(() => {
-    loadEmployee();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [employeeId]);
-
-  const loadEmployee = async () => {
-    try {
-      setLoading(true);
-      const { data, error } = await supabase
-        .from('employees')
-        .select('*')
-        .eq('id', employeeId)
-        .single();
-
-      if (error) throw error;
-      setEmployee(data);
-    } catch (error) {
-      console.error('Error loading employee:', error);
-      toast.error('Failed to load employee details');
-    } finally {
-      setLoading(false);
+  // Sample employee data (would come from database)
+  const employee = {
+    id: params.id,
+    first_name: 'John',
+    last_name: 'Kila',
+    email: 'j.kila@unre.ac.pg',
+    phone: '+675 7123 4567',
+    employee_id: 'UNRE-2020-001',
+    department: 'Faculty of Environmental Sciences',
+    position: 'Senior Lecturer',
+    employment_type: 'Full-time Academic',
+    salary: 85000,
+    hire_date: '2020-01-15',
+    status: 'active',
+    address: 'Port Moresby, National Capital District',
+    emergency_contact: {
+      name: 'Jane Kila',
+      phone: '+675 7234 5678',
+      relation: 'Spouse'
     }
-  };
-
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-lg">Loading employee details...</div>
-      </div>
-    );
   }
 
-  if (!employee) {
-    return (
-      <div className="container mx-auto py-12 text-center">
-        <AlertCircle className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-        <h2 className="text-2xl font-bold mb-2">Employee Not Found</h2>
-        <p className="text-gray-600 mb-4">
-          The employee you're looking for doesn't exist.
-        </p>
-        <Link href="/dashboard/employees">
-          <Button>
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Employees
-          </Button>
-        </Link>
-      </div>
-    );
-  }
+  const salaryHistory = [
+    { date: '2024-12-01', amount: 85000, type: 'Monthly Salary', status: 'Paid' },
+    { date: '2024-11-01', amount: 85000, type: 'Monthly Salary', status: 'Paid' },
+    { date: '2024-10-01', amount: 85000, type: 'Monthly Salary', status: 'Paid' },
+    { date: '2024-09-01', amount: 85000, type: 'Monthly Salary', status: 'Paid' }
+  ]
 
-  const getStatusBadge = (status: string) => {
-    const badges = {
-      active: <Badge className="bg-green-600">Active</Badge>,
-      on_leave: <Badge className="bg-yellow-600">On Leave</Badge>,
-      terminated: <Badge className="bg-red-600">Terminated</Badge>,
-    };
-    return badges[status as keyof typeof badges] || <Badge>{status}</Badge>;
-  };
+  const leaveHistory = [
+    {
+      id: 'LV001',
+      type: 'Annual Leave',
+      start_date: '2024-12-20',
+      end_date: '2024-12-24',
+      days: 5,
+      status: 'Approved'
+    },
+    {
+      id: 'LV002',
+      type: 'Sick Leave',
+      start_date: '2024-11-10',
+      end_date: '2024-11-11',
+      days: 2,
+      status: 'Approved'
+    }
+  ]
+
+  const attendanceRecords = [
+    { date: '2025-12-05', check_in: '08:15', check_out: '17:30', hours: 9.25, status: 'Present' },
+    { date: '2025-12-04', check_in: '08:10', check_out: '17:45', hours: 9.58, status: 'Present' },
+    { date: '2025-12-03', check_in: '09:05', check_out: '18:00', hours: 8.92, status: 'Late' },
+    { date: '2025-12-02', check_in: '08:00', check_out: '17:15', hours: 9.25, status: 'Present' }
+  ]
+
+  const formatCurrency = (amount: number) => {
+    return `K${amount.toLocaleString('en-PG')}`
+  }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <Link href="/dashboard/employees">
-          <Button variant="outline" size="sm">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Employees
-          </Button>
-        </Link>
-      </div>
-
-      {/* Employee Header Card */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex items-start gap-6">
-            {/* Profile Photo */}
-            <div className="flex-shrink-0">
-              <div className="w-24 h-24 rounded-full bg-green-100 flex items-center justify-center text-3xl font-bold text-green-700">
-                {employee.first_name[0]}
-                {employee.last_name[0]}
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50">
+      <header className="border-b bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard/employees">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Employees
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-primary">
+                  {employee.first_name} {employee.last_name}
+                </h1>
+                <p className="text-xs text-muted-foreground">{employee.employee_id}</p>
               </div>
             </div>
-
-            {/* Employee Info */}
-            <div className="flex-1">
-              <div className="flex items-start justify-between">
-                <div>
-                  <h1 className="text-3xl font-bold">
-                    {employee.first_name} {employee.last_name}
-                  </h1>
-                  <p className="text-lg text-gray-600 mt-1">{employee.position}</p>
-                  <div className="flex items-center gap-4 mt-2">
-                    <span className="text-sm text-gray-600">
-                      ID: {employee.employee_id}
-                    </span>
-                    {getStatusBadge(employee.status)}
-                  </div>
-                </div>
-                <Button variant="outline">Edit Profile</Button>
-              </div>
-
-              {/* Quick Info Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-600">Email</p>
-                    <p className="text-sm font-medium">{employee.email}</p>
-                  </div>
-                </div>
-                {employee.phone && (
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4 text-gray-500" />
-                    <div>
-                      <p className="text-xs text-gray-600">Phone</p>
-                      <p className="text-sm font-medium">{employee.phone}</p>
-                    </div>
-                  </div>
-                )}
-                <div className="flex items-center gap-2">
-                  <Briefcase className="h-4 w-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-600">Department</p>
-                    <p className="text-sm font-medium">{employee.department}</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-gray-500" />
-                  <div>
-                    <p className="text-xs text-gray-600">Hire Date</p>
-                    <p className="text-sm font-medium">
-                      {new Date(employee.hire_date).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              </div>
+            <div className="flex gap-2">
+              <Link href={`/dashboard/employees/${employee.id}/edit`}>
+                <Button variant="outline">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+              </Link>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </header>
 
-      {/* Tabbed Content */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="overview">
-            <User className="mr-2 h-4 w-4" />
+      <div className="container mx-auto px-4 py-8">
+        {/* Employee Profile Card */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="flex items-start gap-6">
+              <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <span className="text-4xl font-bold text-primary">
+                  {employee.first_name[0]}{employee.last_name[0]}
+                </span>
+              </div>
+              <div className="flex-1">
+                <h2 className="text-2xl font-bold mb-2">
+                  {employee.first_name} {employee.last_name}
+                </h2>
+                <p className="text-lg text-gray-600 mb-4">{employee.position}</p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{employee.email}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Phone className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{employee.phone}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <MapPin className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{employee.address}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4 text-primary" />
+                    <span className="text-sm">{employee.department}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-primary" />
+                    <span className="text-sm">Hired: {new Date(employee.hire_date).toLocaleDateString()}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-4 w-4 text-primary" />
+                    <span className="text-sm font-medium">{formatCurrency(employee.salary)}/year</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Tabs */}
+        <div className="flex gap-2 mb-6">
+          <Button
+            variant={activeTab === 'overview' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('overview')}
+          >
             Overview
-          </TabsTrigger>
-          <TabsTrigger value="emergency-contacts">
-            <Users className="mr-2 h-4 w-4" />
-            Emergency Contacts
-          </TabsTrigger>
-          <TabsTrigger value="documents">
-            <FileText className="mr-2 h-4 w-4" />
-            Documents
-          </TabsTrigger>
-        </TabsList>
+          </Button>
+          <Button
+            variant={activeTab === 'salary' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('salary')}
+          >
+            Salary History
+          </Button>
+          <Button
+            variant={activeTab === 'leave' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('leave')}
+          >
+            Leave Records
+          </Button>
+          <Button
+            variant={activeTab === 'attendance' ? 'default' : 'outline'}
+            onClick={() => setActiveTab('attendance')}
+          >
+            Attendance
+          </Button>
+        </div>
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Personal Information */}
+        {/* Tab Content */}
+        {activeTab === 'overview' && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
                 <CardTitle>Personal Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Full Name</span>
-                  <span className="font-medium">
-                    {employee.first_name} {employee.last_name}
-                  </span>
+                <div>
+                  <p className="text-sm text-gray-600">Full Name</p>
+                  <p className="font-medium">{employee.first_name} {employee.last_name}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Employee ID</span>
-                  <span className="font-medium">{employee.employee_id}</span>
+                <div>
+                  <p className="text-sm text-gray-600">Employee ID</p>
+                  <p className="font-medium">{employee.employee_id}</p>
                 </div>
-                {employee.national_id && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">National ID</span>
-                    <span className="font-medium">{employee.national_id}</span>
-                  </div>
-                )}
-                {employee.passport_number && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Passport</span>
-                    <span className="font-medium">{employee.passport_number}</span>
-                  </div>
-                )}
-                {employee.drivers_license && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Driver's License</span>
-                    <span className="font-medium">{employee.drivers_license}</span>
-                  </div>
-                )}
+                <div>
+                  <p className="text-sm text-gray-600">Email</p>
+                  <p className="font-medium">{employee.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Phone</p>
+                  <p className="font-medium">{employee.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Address</p>
+                  <p className="font-medium">{employee.address}</p>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Employment Information */}
             <Card>
               <CardHeader>
                 <CardTitle>Employment Details</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Position</span>
-                  <span className="font-medium">{employee.position}</span>
+                <div>
+                  <p className="text-sm text-gray-600">Position</p>
+                  <p className="font-medium">{employee.position}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Department</span>
-                  <span className="font-medium">{employee.department}</span>
+                <div>
+                  <p className="text-sm text-gray-600">Department</p>
+                  <p className="font-medium">{employee.department}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Employment Type</span>
-                  <span className="font-medium">{employee.employment_type}</span>
+                <div>
+                  <p className="text-sm text-gray-600">Employment Type</p>
+                  <p className="font-medium">{employee.employment_type}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Hire Date</span>
-                  <span className="font-medium">
-                    {new Date(employee.hire_date).toLocaleDateString()}
-                  </span>
+                <div>
+                  <p className="text-sm text-gray-600">Hire Date</p>
+                  <p className="font-medium">{new Date(employee.hire_date).toLocaleDateString()}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Status</span>
-                  {getStatusBadge(employee.status)}
+                <div>
+                  <p className="text-sm text-gray-600">Annual Salary</p>
+                  <p className="font-medium text-primary">{formatCurrency(employee.salary)}</p>
                 </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Annual Salary</span>
-                  <span className="font-medium">
-                    PGK {employee.salary.toLocaleString()}
-                  </span>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Emergency Contact</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div>
+                  <p className="text-sm text-gray-600">Name</p>
+                  <p className="font-medium">{employee.emergency_contact.name}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Phone</p>
+                  <p className="font-medium">{employee.emergency_contact.phone}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-600">Relation</p>
+                  <p className="font-medium">{employee.emergency_contact.relation}</p>
                 </div>
               </CardContent>
             </Card>
           </div>
-        </TabsContent>
+        )}
 
-        <TabsContent value="emergency-contacts">
-          <iframe
-            src={`/dashboard/employees/${employeeId}/emergency-contacts`}
-            className="w-full h-[800px] border-0"
-            title="Emergency Contacts"
-          />
-        </TabsContent>
+        {activeTab === 'salary' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Salary Payment History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-3">Date</th>
+                    <th className="text-left p-3">Type</th>
+                    <th className="text-right p-3">Amount</th>
+                    <th className="text-center p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {salaryHistory.map((record, index) => (
+                    <tr key={index} className="border-b hover:bg-gray-50">
+                      <td className="p-3">{new Date(record.date).toLocaleDateString()}</td>
+                      <td className="p-3">{record.type}</td>
+                      <td className="p-3 text-right font-medium">{formatCurrency(record.amount)}</td>
+                      <td className="p-3 text-center">
+                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                          {record.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        )}
 
-        <TabsContent value="documents">
-          <iframe
-            src={`/dashboard/employees/${employeeId}/documents`}
-            className="w-full h-[800px] border-0"
-            title="Documents"
-          />
-        </TabsContent>
-      </Tabs>
+        {activeTab === 'leave' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Leave Application History</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-3">Leave ID</th>
+                    <th className="text-left p-3">Type</th>
+                    <th className="text-left p-3">Duration</th>
+                    <th className="text-center p-3">Days</th>
+                    <th className="text-center p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leaveHistory.map((leave) => (
+                    <tr key={leave.id} className="border-b hover:bg-gray-50">
+                      <td className="p-3">{leave.id}</td>
+                      <td className="p-3">{leave.type}</td>
+                      <td className="p-3">
+                        {new Date(leave.start_date).toLocaleDateString()} - {new Date(leave.end_date).toLocaleDateString()}
+                      </td>
+                      <td className="p-3 text-center">{leave.days}</td>
+                      <td className="p-3 text-center">
+                        <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
+                          {leave.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === 'attendance' && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Attendance Records</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-3">Date</th>
+                    <th className="text-center p-3">Check In</th>
+                    <th className="text-center p-3">Check Out</th>
+                    <th className="text-center p-3">Hours</th>
+                    <th className="text-center p-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceRecords.map((record, index) => (
+                    <tr key={index} className="border-b hover:bg-gray-50">
+                      <td className="p-3">{new Date(record.date).toLocaleDateString()}</td>
+                      <td className="p-3 text-center font-mono">{record.check_in}</td>
+                      <td className="p-3 text-center font-mono">{record.check_out}</td>
+                      <td className="p-3 text-center font-medium">{record.hours}h</td>
+                      <td className="p-3 text-center">
+                        <span className={`px-3 py-1 rounded-full text-sm ${
+                          record.status === 'Present' ? 'bg-green-100 text-green-700' :
+                          record.status === 'Late' ? 'bg-orange-100 text-orange-700' :
+                          'bg-red-100 text-red-700'
+                        }`}>
+                          {record.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
-  );
+  )
 }

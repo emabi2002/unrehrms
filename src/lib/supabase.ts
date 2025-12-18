@@ -1,14 +1,9 @@
-import { createClient as createSupabaseClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey)
-
-// Export function for client components
-export function createClient() {
-  return createSupabaseClient(supabaseUrl, supabaseAnonKey)
-}
+export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 export type Database = {
   public: {
@@ -28,7 +23,6 @@ export type Database = {
           hire_date: string
           salary: number
           status: 'active' | 'on_leave' | 'terminated'
-          profile_picture: string | null
         }
         Insert: Omit<Database['public']['Tables']['employees']['Row'], 'id' | 'created_at'>
         Update: Partial<Database['public']['Tables']['employees']['Insert']>

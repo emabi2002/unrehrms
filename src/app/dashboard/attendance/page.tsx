@@ -1,295 +1,298 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Plus,
-  Edit,
-  Eye,
-  ChevronLeft,
-  ChevronRight,
-} from 'lucide-react'
-import toast from 'react-hot-toast'
-
-interface AttendanceRecord {
-  id: string
-  date: string
-  employeeId: string
-  employeeName: string
-  department: string
-  checkIn: string | null
-  checkOut: string | null
-  status: 'present' | 'late' | 'absent' | 'half_day'
-}
-
-const attendanceRecords: AttendanceRecord[] = [
-  {
-    id: 'DEMO/ATT/000001',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000001',
-    employeeName: 'John Kila',
-    department: 'Environmental Sciences',
-    checkIn: '08:15 AM',
-    checkOut: '05:30 PM',
-    status: 'present'
-  },
-  {
-    id: 'DEMO/ATT/000002',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000002',
-    employeeName: 'Sarah Puka',
-    department: 'Administrative Services',
-    checkIn: '09:15 AM',
-    checkOut: '06:00 PM',
-    status: 'late'
-  },
-  {
-    id: 'DEMO/ATT/000003',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000003',
-    employeeName: 'Mary Tone',
-    department: 'Natural Resources',
-    checkIn: '08:00 AM',
-    checkOut: '05:15 PM',
-    status: 'present'
-  },
-  {
-    id: 'DEMO/ATT/000004',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000004',
-    employeeName: 'David Kama',
-    department: 'IT Department',
-    checkIn: '08:30 AM',
-    checkOut: null,
-    status: 'present'
-  },
-  {
-    id: 'DEMO/ATT/000005',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000005',
-    employeeName: 'Grace Namu',
-    department: 'Agriculture',
-    checkIn: null,
-    checkOut: null,
-    status: 'absent'
-  },
-  {
-    id: 'DEMO/ATT/000006',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000006',
-    employeeName: 'Peter Wau',
-    department: 'Finance',
-    checkIn: '08:10 AM',
-    checkOut: '01:00 PM',
-    status: 'half_day'
-  },
-  {
-    id: 'DEMO/ATT/000007',
-    date: '15-12-2025',
-    employeeId: 'DEMO/EMP/000007',
-    employeeName: 'Anna Bola',
-    department: 'Environmental Sciences',
-    checkIn: '08:05 AM',
-    checkOut: '05:20 PM',
-    status: 'present'
-  },
-]
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { ArrowLeft, Clock, CheckCircle, XCircle, Calendar, Download } from 'lucide-react'
+import { attendanceService } from '@/lib/db-helpers'
 
 export default function AttendancePage() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [attendance, setAttendance] = useState(attendanceRecords)
-  const [entriesPerPage, setEntriesPerPage] = useState('10')
-  const [currentPage, setCurrentPage] = useState(1)
-
-  const filteredAttendance = attendance.filter(record => {
-    const search = searchTerm.toLowerCase()
-    return record.employeeName.toLowerCase().includes(search) ||
-           record.employeeId.toLowerCase().includes(search) ||
-           record.department.toLowerCase().includes(search)
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0])
+  const [attendanceRecords, setAttendanceRecords] = useState<any[]>([])
+  const [loading, setLoading] = useState(false)
+  const [stats, setStats] = useState({
+    total: 0,
+    present: 0,
+    absent: 0,
+    late: 0,
+    percentage: 0
   })
 
-  const totalPages = Math.ceil(filteredAttendance.length / Number.parseInt(entriesPerPage))
-  const startIndex = (currentPage - 1) * Number.parseInt(entriesPerPage)
-  const endIndex = startIndex + Number.parseInt(entriesPerPage)
-  const currentAttendance = filteredAttendance.slice(startIndex, endIndex)
+  // Sample attendance data for demonstration
+  const sampleAttendance = [
+    {
+      id: '1',
+      employee_id: '001',
+      date: selectedDate,
+      check_in: '08:15:00',
+      check_out: '17:30:00',
+      status: 'present',
+      employees: {
+        first_name: 'John',
+        last_name: 'Kila',
+        employee_id: 'UNRE-2020-001',
+        department: 'Faculty of Environmental Sciences'
+      }
+    },
+    {
+      id: '2',
+      employee_id: '002',
+      date: selectedDate,
+      check_in: '09:15:00',
+      check_out: '18:00:00',
+      status: 'late',
+      employees: {
+        first_name: 'Sarah',
+        last_name: 'Puka',
+        employee_id: 'UNRE-2021-045',
+        department: 'Administrative Services'
+      }
+    },
+    {
+      id: '3',
+      employee_id: '003',
+      date: selectedDate,
+      check_in: '08:00:00',
+      check_out: '17:15:00',
+      status: 'present',
+      employees: {
+        first_name: 'Mary',
+        last_name: 'Tone',
+        employee_id: 'UNRE-2018-012',
+        department: 'Faculty of Natural Resources'
+      }
+    },
+    {
+      id: '4',
+      employee_id: '004',
+      date: selectedDate,
+      check_in: '08:30:00',
+      check_out: null,
+      status: 'present',
+      employees: {
+        first_name: 'David',
+        last_name: 'Kama',
+        employee_id: 'UNRE-2022-078',
+        department: 'IT Department'
+      }
+    },
+    {
+      id: '5',
+      employee_id: '005',
+      date: selectedDate,
+      check_in: null,
+      check_out: null,
+      status: 'absent',
+      employees: {
+        first_name: 'Grace',
+        last_name: 'Namu',
+        employee_id: 'UNRE-2019-034',
+        department: 'Faculty of Agriculture'
+      }
+    }
+  ]
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'present':
-        return 'bg-green-500'
-      case 'late':
-        return 'bg-yellow-500'
-      case 'absent':
-        return 'bg-red-500'
-      case 'half_day':
-        return 'bg-orange-500'
-      default:
-        return 'bg-gray-500'
+  useEffect(() => {
+    loadAttendance()
+  }, [selectedDate])
+
+  const loadAttendance = async () => {
+    setLoading(true)
+    try {
+      const { data, error } = await attendanceService.getAll(selectedDate)
+
+      if (error) {
+        // Use sample data if database not set up
+        setAttendanceRecords(sampleAttendance)
+      } else {
+        setAttendanceRecords(data || sampleAttendance)
+      }
+
+      calculateStats(data || sampleAttendance)
+    } catch (err) {
+      setAttendanceRecords(sampleAttendance)
+      calculateStats(sampleAttendance)
+    } finally {
+      setLoading(false)
     }
   }
 
+  const calculateStats = (records: any[]) => {
+    const total = records.length
+    const present = records.filter(r => r.status === 'present').length
+    const late = records.filter(r => r.status === 'late').length
+    const absent = records.filter(r => r.status === 'absent').length
+    const percentage = total > 0 ? Math.round((present + late) / total * 100) : 0
+
+    setStats({ total, present, absent, late, percentage })
+  }
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'present': return 'bg-green-100 text-green-700'
+      case 'late': return 'bg-orange-100 text-orange-700'
+      case 'absent': return 'bg-red-100 text-red-700'
+      case 'half_day': return 'bg-blue-100 text-blue-700'
+      default: return 'bg-gray-100 text-gray-700'
+    }
+  }
+
+  const formatTime = (time: string | null) => {
+    if (!time) return '--:--'
+    return time.substring(0, 5)
+  }
+
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Attendance Tracking</h1>
-            <div className="flex gap-4 mt-3">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-600">Present</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                <span className="text-sm text-gray-600">Late</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-orange-500 rounded"></div>
-                <span className="text-sm text-gray-600">Half Day</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-red-500 rounded"></div>
-                <span className="text-sm text-gray-600">Absent</span>
-              </div>
-            </div>
-          </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="h-4 w-4 mr-2" />
-            New
-          </Button>
-        </div>
-
-        {/* Controls */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Show</span>
-            <Select value={entriesPerPage} onValueChange={setEntriesPerPage}>
-              <SelectTrigger className="w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-gray-600">entries</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Search:</span>
-            <Input
-              type="text"
-              placeholder=""
-              className="w-64"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">#</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Record ID</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Employee ID</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Employee Name</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Department</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Check In</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Check Out</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentAttendance.map((record, index) => (
-                <tr
-                  key={record.id}
-                  className={`border-b border-gray-100 hover:bg-gray-50 ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-purple-50/30'
-                  }`}
-                >
-                  <td className="px-4 py-3 text-sm text-gray-700">{startIndex + index + 1}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.date}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.id}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.employeeId}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 font-medium">{record.employeeName}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.department}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.checkIn || '--'}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{record.checkOut || '--'}</td>
-                  <td className="px-4 py-3">
-                    <div className={`w-4 h-4 rounded ${getStatusColor(record.status)}`}></div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <button className="text-blue-600 hover:text-blue-800">
-                        <Edit className="h-4 w-4" />
-                      </button>
-                      <button className="text-green-600 hover:text-green-800">
-                        <Eye className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <div className="text-sm text-gray-600">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredAttendance.length)} of {filteredAttendance.length} entries
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
-            </Button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className={currentPage === page ? "bg-blue-600 hover:bg-blue-700" : ""}
-                >
-                  {page}
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-pink-50">
+      <header className="border-b bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Dashboard
                 </Button>
-              ))}
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-purple-600">Attendance Tracking</h1>
+                <p className="text-xs text-muted-foreground">Real-time attendance monitoring</p>
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
+            <div className="flex items-center gap-3">
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              />
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </div>
           </div>
         </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Statistics */}
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Total Staff</p>
+                <p className="text-3xl font-bold text-gray-900">{stats.total}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-green-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Present</p>
+                <p className="text-3xl font-bold text-green-600">{stats.present}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-orange-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Late</p>
+                <p className="text-3xl font-bold text-orange-600">{stats.late}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-red-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Absent</p>
+                <p className="text-3xl font-bold text-red-600">{stats.absent}</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-purple-500">
+            <CardContent className="pt-6">
+              <div className="text-center">
+                <p className="text-sm text-gray-600 mb-1">Attendance</p>
+                <p className="text-3xl font-bold text-purple-600">{stats.percentage}%</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Attendance Records */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span>Attendance Records - {new Date(selectedDate).toLocaleDateString('en-PG', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-3 font-medium">Employee</th>
+                    <th className="text-left p-3 font-medium">Department</th>
+                    <th className="text-center p-3 font-medium">Check In</th>
+                    <th className="text-center p-3 font-medium">Check Out</th>
+                    <th className="text-center p-3 font-medium">Hours</th>
+                    <th className="text-center p-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {attendanceRecords.map((record) => {
+                    const hours = record.check_in && record.check_out
+                      ? ((new Date(`2000-01-01T${record.check_out}`).getTime() -
+                          new Date(`2000-01-01T${record.check_in}`).getTime()) / 3600000).toFixed(1)
+                      : '--'
+
+                    return (
+                      <tr key={record.id} className="border-b hover:bg-gray-50">
+                        <td className="p-3">
+                          <div>
+                            <p className="font-medium">
+                              {record.employees.first_name} {record.employees.last_name}
+                            </p>
+                            <p className="text-sm text-gray-500">{record.employees.employee_id}</p>
+                          </div>
+                        </td>
+                        <td className="p-3 text-sm text-gray-600">
+                          {record.employees.department}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="font-mono text-sm">
+                            {formatTime(record.check_in)}
+                          </span>
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className="font-mono text-sm">
+                            {formatTime(record.check_out)}
+                          </span>
+                        </td>
+                        <td className="p-3 text-center font-medium">
+                          {hours !== '--' && `${hours}h`}
+                          {hours === '--' && '--'}
+                        </td>
+                        <td className="p-3 text-center">
+                          <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(record.status)}`}>
+                            {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

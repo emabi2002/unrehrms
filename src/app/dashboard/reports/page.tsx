@@ -1,314 +1,318 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  Plus,
+  ArrowLeft,
+  BarChart,
   Download,
-  Eye,
-  ChevronLeft,
-  ChevronRight,
+  FileText,
+  TrendingUp,
+  Users,
+  Calendar,
+  DollarSign,
+  PieChart,
+  Activity
 } from 'lucide-react'
-import toast from 'react-hot-toast'
-
-interface Report {
-  id: string
-  date: string
-  reportName: string
-  reportType: string
-  generatedBy: string
-  period: string
-  format: string
-  status: 'completed' | 'processing' | 'failed'
-}
-
-const sampleReports: Report[] = [
-  {
-    id: 'DEMO/RPT/000001',
-    date: '10-12-2025',
-    reportName: 'Employee Headcount Report',
-    reportType: 'HR Analytics',
-    generatedBy: 'Sarah Puka',
-    period: 'December 2025',
-    format: 'PDF',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000002',
-    date: '10-12-2025',
-    reportName: 'Monthly Payroll Summary',
-    reportType: 'Payroll',
-    generatedBy: 'Finance Department',
-    period: 'November 2025',
-    format: 'Excel',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000003',
-    date: '09-12-2025',
-    reportName: 'Leave Balance Report',
-    reportType: 'Leave Management',
-    generatedBy: 'HR Manager',
-    period: 'Q4 2025',
-    format: 'PDF',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000004',
-    date: '08-12-2025',
-    reportName: 'Attendance Statistics',
-    reportType: 'Attendance',
-    generatedBy: 'Admin',
-    period: 'November 2025',
-    format: 'Excel',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000005',
-    date: '07-12-2025',
-    reportName: 'Department Budget Analysis',
-    reportType: 'Financial',
-    generatedBy: 'Finance Officer',
-    period: '2025 Annual',
-    format: 'PDF',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000006',
-    date: '06-12-2025',
-    reportName: 'Salary Structure Report',
-    reportType: 'Payroll',
-    generatedBy: 'Payroll Manager',
-    period: 'December 2025',
-    format: 'PDF',
-    status: 'processing'
-  },
-  {
-    id: 'DEMO/RPT/000007',
-    date: '05-12-2025',
-    reportName: 'Tax Deductions Report',
-    reportType: 'Tax & Compliance',
-    generatedBy: 'Finance Department',
-    period: 'November 2025',
-    format: 'Excel',
-    status: 'completed'
-  },
-  {
-    id: 'DEMO/RPT/000008',
-    date: '04-12-2025',
-    reportName: 'Employee Performance Review',
-    reportType: 'HR Analytics',
-    generatedBy: 'HR Manager',
-    period: 'Q4 2025',
-    format: 'PDF',
-    status: 'failed'
-  },
-]
 
 export default function ReportsPage() {
-  const [searchTerm, setSearchTerm] = useState('')
-  const [reports, setReports] = useState(sampleReports)
-  const [entriesPerPage, setEntriesPerPage] = useState('10')
-  const [currentPage, setCurrentPage] = useState(1)
+  const [selectedPeriod, setSelectedPeriod] = useState('month')
 
-  const filteredReports = reports.filter(report => {
-    const search = searchTerm.toLowerCase()
-    return report.reportName.toLowerCase().includes(search) ||
-           report.reportType.toLowerCase().includes(search) ||
-           report.generatedBy.toLowerCase().includes(search) ||
-           report.period.toLowerCase().includes(search)
-  })
-
-  const totalPages = Math.ceil(filteredReports.length / Number.parseInt(entriesPerPage))
-  const startIndex = (currentPage - 1) * Number.parseInt(entriesPerPage)
-  const endIndex = startIndex + Number.parseInt(entriesPerPage)
-  const currentReports = filteredReports.slice(startIndex, endIndex)
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-500'
-      case 'processing':
-        return 'bg-yellow-500'
-      case 'failed':
-        return 'bg-red-500'
-      default:
-        return 'bg-gray-500'
-    }
+  // Sample analytics data
+  const employeeStats = {
+    total: 524,
+    academic: 283,
+    administrative: 185,
+    technical: 56,
+    growth: 12
   }
 
-  const handleDownload = (reportId: string, reportName: string) => {
-    toast.success(`Downloading: ${reportName}`)
+  const attendanceStats = {
+    present: 487,
+    absent: 23,
+    late: 14,
+    percentage: 92.9
   }
 
-  const handleView = (reportId: string, reportName: string) => {
-    toast(`Opening: ${reportName}`)
+  const leaveStats = {
+    approved: 156,
+    pending: 15,
+    rejected: 8,
+    mostUsed: 'Annual Leave'
+  }
+
+  const payrollStats = {
+    totalPayroll: 38420000,
+    avgSalary: 73321,
+    highestDept: 'Faculty of Natural Resources',
+    taxCollected: 5763000
+  }
+
+  const departmentData = [
+    { name: 'Environmental Sciences', employees: 45, avgSalary: 78500 },
+    { name: 'Natural Resources', employees: 52, avgSalary: 82100 },
+    { name: 'Agriculture', employees: 38, avgSalary: 71200 },
+    { name: 'Administrative', employees: 65, avgSalary: 62300 },
+    { name: 'IT Department', employees: 18, avgSalary: 75600 },
+    { name: 'Student Services', employees: 28, avgSalary: 58400 }
+  ]
+
+  const monthlyTrends = [
+    { month: 'Jul', employees: 512, payroll: 37100000 },
+    { month: 'Aug', employees: 515, payroll: 37350000 },
+    { month: 'Sep', employees: 518, payroll: 37580000 },
+    { month: 'Oct', employees: 520, payroll: 37800000 },
+    { month: 'Nov', employees: 522, payroll: 38100000 },
+    { month: 'Dec', employees: 524, payroll: 38420000 }
+  ]
+
+  const formatCurrency = (amount: number) => {
+    return `K${(amount / 1000000).toFixed(2)}M`
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      {/* Header */}
-      <div className="bg-white rounded-lg shadow-sm mb-6 p-6">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Reports & Analytics</h1>
-            <div className="flex gap-4 mt-3">
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-green-500 rounded"></div>
-                <span className="text-sm text-gray-600">Completed</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-yellow-500 rounded"></div>
-                <span className="text-sm text-gray-600">Processing</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-4 h-4 bg-red-500 rounded"></div>
-                <span className="text-sm text-gray-600">Failed</span>
-              </div>
-            </div>
-          </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-            <Plus className="h-4 w-4 mr-2" />
-            New
-          </Button>
-        </div>
-
-        {/* Controls */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Show</span>
-            <Select value={entriesPerPage} onValueChange={setEntriesPerPage}>
-              <SelectTrigger className="w-20">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
-              </SelectContent>
-            </Select>
-            <span className="text-sm text-gray-600">entries</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">Search:</span>
-            <Input
-              type="text"
-              placeholder=""
-              className="w-64"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Table */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 border-b border-gray-200">
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">#</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Date</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Report Name</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Report Type</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Generated By</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Period</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Format</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Status</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-gray-700">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentReports.map((report, index) => (
-                <tr
-                  key={report.id}
-                  className={`border-b border-gray-100 hover:bg-gray-50 ${
-                    index % 2 === 0 ? 'bg-white' : 'bg-purple-50/30'
-                  }`}
-                >
-                  <td className="px-4 py-3 text-sm text-gray-700">{startIndex + index + 1}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{report.date}</td>
-                  <td className="px-4 py-3 text-sm text-gray-900 font-medium">{report.reportName}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{report.reportType}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{report.generatedBy}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{report.period}</td>
-                  <td className="px-4 py-3 text-sm text-gray-700">{report.format}</td>
-                  <td className="px-4 py-3">
-                    <div className={`w-4 h-4 rounded ${getStatusColor(report.status)}`}></div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <button
-                        className="text-green-600 hover:text-green-800"
-                        onClick={() => handleView(report.id, report.reportName)}
-                        disabled={report.status !== 'completed'}
-                      >
-                        <Eye className="h-4 w-4" />
-                      </button>
-                      <button
-                        className="text-blue-600 hover:text-blue-800"
-                        onClick={() => handleDownload(report.id, report.reportName)}
-                        disabled={report.status !== 'completed'}
-                      >
-                        <Download className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination */}
-        <div className="flex items-center justify-between px-6 py-4 bg-gray-50 border-t border-gray-200">
-          <div className="text-sm text-gray-600">
-            Showing {startIndex + 1} to {Math.min(endIndex, filteredReports.length)} of {filteredReports.length} entries
-          </div>
-          <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-            >
-              <ChevronLeft className="h-4 w-4 mr-1" />
-              Previous
-            </Button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                <Button
-                  key={page}
-                  variant={currentPage === page ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentPage(page)}
-                  className={currentPage === page ? "bg-blue-600 hover:bg-blue-700" : ""}
-                >
-                  {page}
+    <div className="min-h-screen bg-gradient-to-br from-rose-50 to-red-50">
+      <header className="border-b bg-white shadow-sm sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link href="/dashboard">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Dashboard
                 </Button>
-              ))}
+              </Link>
+              <div>
+                <h1 className="text-xl font-bold text-rose-600">Reports & Analytics</h1>
+                <p className="text-xs text-muted-foreground">HR insights and data visualization</p>
+              </div>
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-              disabled={currentPage === totalPages}
-            >
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
+            <div className="flex gap-2">
+              <select
+                value={selectedPeriod}
+                onChange={(e) => setSelectedPeriod(e.target.value)}
+                className="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-rose-500"
+              >
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
+                <option value="quarter">This Quarter</option>
+                <option value="year">This Year</option>
+              </select>
+              <Button variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export All
+              </Button>
+            </div>
           </div>
         </div>
+      </header>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* Quick Stats Overview */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+          <Card className="border-l-4 border-l-blue-500">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total Reports</p>
+                  <p className="text-3xl font-bold text-blue-600">24</p>
+                  <p className="text-xs text-green-600 mt-1">↑ 3 new this month</p>
+                </div>
+                <FileText className="h-10 w-10 text-blue-500/20" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-purple-500">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total Employees</p>
+                  <p className="text-3xl font-bold text-purple-600">{employeeStats.total}</p>
+                  <p className="text-xs text-green-600 mt-1">↑ {employeeStats.growth} this month</p>
+                </div>
+                <Users className="h-10 w-10 text-purple-500/20" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-orange-500">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Attendance Rate</p>
+                  <p className="text-3xl font-bold text-orange-600">{attendanceStats.percentage}%</p>
+                  <p className="text-xs text-gray-500 mt-1">{attendanceStats.present}/{employeeStats.total} present</p>
+                </div>
+                <Activity className="h-10 w-10 text-orange-500/20" />
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-l-4 border-l-green-500">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-gray-600 mb-1">Total Payroll</p>
+                  <p className="text-3xl font-bold text-green-600">{formatCurrency(payrollStats.totalPayroll)}</p>
+                  <p className="text-xs text-gray-500 mt-1">Monthly average</p>
+                </div>
+                <DollarSign className="h-10 w-10 text-green-500/20" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Analytics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Employee Distribution */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <PieChart className="h-5 w-5 text-rose-600" />
+                Employee Distribution
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Academic Staff</span>
+                    <span className="text-sm font-bold text-blue-600">{employeeStats.academic}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-600 h-2 rounded-full"
+                      style={{ width: `${(employeeStats.academic / employeeStats.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Administrative Staff</span>
+                    <span className="text-sm font-bold text-purple-600">{employeeStats.administrative}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-purple-600 h-2 rounded-full"
+                      style={{ width: `${(employeeStats.administrative / employeeStats.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium">Technical Staff</span>
+                    <span className="text-sm font-bold text-orange-600">{employeeStats.technical}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-orange-600 h-2 rounded-full"
+                      style={{ width: `${(employeeStats.technical / employeeStats.total) * 100}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Leave Statistics */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Calendar className="h-5 w-5 text-rose-600" />
+                Leave Statistics
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4 mb-4">
+                <div className="p-4 bg-green-50 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">Approved</p>
+                  <p className="text-3xl font-bold text-green-600">{leaveStats.approved}</p>
+                </div>
+                <div className="p-4 bg-orange-50 rounded-lg">
+                  <p className="text-sm text-gray-600 mb-1">Pending</p>
+                  <p className="text-3xl font-bold text-orange-600">{leaveStats.pending}</p>
+                </div>
+              </div>
+              <div className="p-4 bg-gray-50 rounded-lg">
+                <p className="text-sm text-gray-600 mb-1">Most Used Leave Type</p>
+                <p className="text-lg font-bold text-gray-900">{leaveStats.mostUsed}</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Department Comparison */}
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              <span className="flex items-center gap-2">
+                <BarChart className="h-5 w-5 text-rose-600" />
+                Department Comparison
+              </span>
+              <Button size="sm" variant="outline">
+                <Download className="h-4 w-4 mr-2" />
+                Export
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b bg-gray-50">
+                    <th className="text-left p-3 font-medium">Department</th>
+                    <th className="text-center p-3 font-medium">Employees</th>
+                    <th className="text-center p-3 font-medium">Avg Salary</th>
+                    <th className="text-center p-3 font-medium">Total Cost</th>
+                    <th className="text-center p-3 font-medium">Growth</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {departmentData.map((dept, index) => (
+                    <tr key={index} className="border-b hover:bg-gray-50">
+                      <td className="p-3 font-medium">{dept.name}</td>
+                      <td className="p-3 text-center">{dept.employees}</td>
+                      <td className="p-3 text-center">K{dept.avgSalary.toLocaleString()}</td>
+                      <td className="p-3 text-center font-medium">
+                        K{(dept.employees * dept.avgSalary).toLocaleString()}
+                      </td>
+                      <td className="p-3 text-center">
+                        <span className="text-green-600">↑ {Math.floor(Math.random() * 5 + 1)}%</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Monthly Trends */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <TrendingUp className="h-5 w-5 text-rose-600" />
+              6-Month Trends
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {monthlyTrends.map((trend, index) => (
+                <div key={index} className="grid grid-cols-3 gap-4 items-center">
+                  <div className="font-medium">{trend.month} 2025</div>
+                  <div className="text-center">
+                    <span className="text-sm text-gray-600">Employees: </span>
+                    <span className="font-bold">{trend.employees}</span>
+                  </div>
+                  <div className="text-right">
+                    <span className="text-sm text-gray-600">Payroll: </span>
+                    <span className="font-bold text-green-600">{formatCurrency(trend.payroll)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )

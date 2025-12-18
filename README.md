@@ -4,158 +4,62 @@
 ![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)
 ![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
-![Progress](https://img.shields.io/badge/Progress-45%25-orange?style=for-the-badge)
 
 Complete Human Resources Management and Payroll Solution for the Papua New Guinea University of Natural Resources & Environment.
 
-## 🎉 Latest Update (December 11, 2025)
-
-**System Status:** 45% Complete - **9 new pages deployed today!**
-
-### ✨ New Features
-- ✅ Positions Management
-- ✅ Job Requisitions (with multi-level approval)
-- ✅ Candidates/ATS (Applicant Tracking)
-- ✅ Applications Management
-- ✅ Interview Scheduling & Evaluation
-- ✅ Performance Goals (with cascading)
-- ✅ Training Courses Catalog
-- ✅ Shifts Management
-- ✅ Overtime Requests
-
-**Total:** 18 functional UI pages with comprehensive features!
-
----
-
 ## 🌿 About
 
-This is a modern, web-based HRMS system designed specifically for PNG University to manage the complete employee lifecycle, from recruitment to retirement.
+This is a modern, web-based HRMS system designed specifically for PNG University to manage:
+- Faculty and staff records
+- Leave management and approvals
+- Attendance tracking
+- Payroll processing
+- Salary slip generation
+- HR analytics and reporting
 
-### **16 Major Modules (Planned):**
-1. ✅ Core HR (Employee Records) - **70%**
-2. ✅ Recruitment & ATS - **65%**
-3. ⏳ Onboarding & Offboarding - **5%**
-4. ✅ Time & Attendance - **65%**
-5. ✅ Leave Management - **60%**
-6. ✅ Payroll Management - **70%**
-7. ⏳ Benefits & Compensation - **5%**
-8. ✅ Performance Management - **40%**
-9. ✅ Learning & Development - **40%**
-10. ⏳ Talent Management - **5%**
-11. ⏳ Employee Relations - **5%**
-12. ⏳ Health & Safety - **5%**
-13. ⏳ Travel & Expense - **5%**
-14. ⏳ Employee/Manager Portals - **15%**
-15. ✅ HR Analytics & Reporting - **35%**
-16. ✅ System Administration - **50%**
+## 🎨 Branding
 
----
+The system uses the official PNG University green (#008751) throughout the interface, providing a consistent and professional look aligned with the university's brand identity.
 
 ## 🚀 Technology Stack
 
 - **Frontend**: Next.js 15 with TypeScript
-- **UI Framework**: Tailwind CSS + shadcn/ui + Radix UI
-- **Icons**: Lucide Icons
-- **Backend**: Supabase PostgreSQL
-- **Storage**: Supabase Storage
-- **Authentication**: Supabase Auth (ready)
-- **Package Manager**: Bun
-- **Deployment**: GitHub → Netlify/Vercel compatible
+- **Backend**: Supabase (PostgreSQL)
+- **UI Framework**: Tailwind CSS + shadcn/ui
+- **Authentication**: Supabase Auth (to be implemented)
+- **Deployment**: Netlify/Vercel compatible
 
----
+## 📦 Features
 
-## 📦 Complete Feature List
-
-### ✅ Employee Management (70%)
-- Complete employee profiles with photos
+### Employee Management
+- Complete employee profiles
 - Department and position tracking
-- Employment type classification (Permanent, Contract, Temporary, Intern)
-- Status management (Active, On Leave, Terminated)
-- Emergency contacts
-- Document management (18 document types)
-- Salary assignments
-- Reports-to hierarchy
+- Employment type classification
+- Status management (active, on leave, terminated)
 
-### ✅ Recruitment & ATS (65%)
-- **Job Requisitions** with multi-level approval (HOD → HR → CEO)
-- **Candidates Database** with source tracking
-- **Applications Management** with screening scores
-- **Interview Scheduling** (Phone, Video, In-Person, Panel)
-- **Interview Evaluation** with scoring system
-- Status pipeline tracking
-- Resume/CV storage
-- LinkedIn integration
-
-### ✅ Positions Management (70%)
-- Job positions with salary ranges
-- Headcount tracking (approved vs current)
-- Job families and grades
-- Department assignments
-- Vacancy management
-
-### ✅ Leave Management (60%)
+### Leave Management
 - Leave applications and approvals
-- Multiple leave types (Annual, Sick, Study, Sabbatical, Maternity, Paternity)
+- Multiple leave types (Annual, Sick, Study, Sabbatical)
 - Leave balance tracking
 - Academic calendar integration
-- Email notifications
-- Multi-level approval workflow
 
-### ✅ Time & Attendance (65%)
+### Attendance System
 - Check-in/Check-out functionality
-- **Shifts Management** with working days configuration
-- **Overtime Requests** with approval workflow
 - Geolocation tracking
 - Late arrival monitoring
-- Hours calculation
-- Payroll integration
+- Comprehensive attendance reports
 
-### ✅ Payroll Processing (70%)
+### Payroll Processing
 - Configurable salary structures
-- Salary components (Basic, Allowances, Deductions)
-- **PNG Tax Calculator** (2025 tax rates)
-- **Superannuation** (Nambawan Super, NASFUND)
-- Pay periods and pay runs
-- Payslips generation
-- **BSP Bank Export** files
 - Teaching and research allowances
+- Tax calculations
 - Automated payroll generation
-- 8 comprehensive payroll reports
 
-### ✅ Performance Management (40%)
-- **Performance Goals** (Organizational, Departmental, Individual)
-- Goal cascading (parent-child hierarchy)
-- KPI metrics and target values
-- Progress tracking (0-100%)
-- Weight percentages
-- Performance periods
-
-### ✅ Training & Development (40%)
-- **Training Courses Catalog**
-- Course categories (Technical, Soft Skills, Compliance, Leadership, Safety)
-- Delivery methods (Classroom, Online, Blended, Workshop)
-- Internal/external providers
-- Cost tracking
-- Certification management
-
-### ✅ Document Management
-- 18 pre-configured document types
-- Upload, download, archive, delete
-- Document expiry tracking
-- Access level controls (HR Only, Manager+HR, Employee Visible, Public)
-- Secure storage with signed URLs
-- 10MB file size limit
-
-### ✅ Reporting & Analytics (35%)
+### Reporting & Analytics
 - Department-wise analytics
 - Payroll summaries
 - Attendance statistics
-- Leave reports
-- Employee distribution charts
-- Interactive dashboards
-- Export to Excel/PDF
-
----
+- Custom report builder
 
 ## 🛠️ Installation
 
@@ -165,7 +69,7 @@ This is a modern, web-based HRMS system designed specifically for PNG University
 - Supabase account
 - Git
 
-### Quick Setup
+### Setup Steps
 
 1. **Clone the repository**
 ```bash
@@ -176,310 +80,227 @@ cd unrehrms
 2. **Install dependencies**
 ```bash
 bun install
+# or
+npm install
 ```
 
 3. **Configure environment variables**
 
-Create a `.env.local` file:
+Create a `.env.local` file in the root directory:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=https://qltnmteqivrnljemyvvb.supabase.co
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 ```
 
-4. **Set up database**
+4. **Set up Supabase database**
 
-Apply all migrations in order:
-```bash
-# Go to Supabase SQL Editor and run migrations 001-008
-# Files located in /supabase/migrations/
+Go to your Supabase SQL Editor and run:
+
+```sql
+-- Employees table
+create table employees (
+  id uuid primary key default uuid_generate_v4(),
+  created_at timestamp with time zone default now(),
+  first_name text not null,
+  last_name text not null,
+  email text unique not null,
+  phone text,
+  employee_id text unique not null,
+  department text not null,
+  position text not null,
+  employment_type text not null,
+  hire_date date not null,
+  salary numeric not null,
+  status text check (status in ('active', 'on_leave', 'terminated')) default 'active'
+);
+
+-- Departments table
+create table departments (
+  id uuid primary key default uuid_generate_v4(),
+  name text unique not null,
+  description text,
+  head_of_department text
+);
+
+-- Leave requests table
+create table leave_requests (
+  id uuid primary key default uuid_generate_v4(),
+  employee_id uuid references employees(id),
+  leave_type text not null,
+  start_date date not null,
+  end_date date not null,
+  reason text,
+  status text check (status in ('pending', 'approved', 'rejected')) default 'pending',
+  created_at timestamp with time zone default now()
+);
+
+-- Attendance table
+create table attendance (
+  id uuid primary key default uuid_generate_v4(),
+  employee_id uuid references employees(id),
+  date date not null,
+  check_in timestamp with time zone,
+  check_out timestamp with time zone,
+  status text check (status in ('present', 'absent', 'late', 'half_day'))
+);
+
+-- Salary slips table
+create table salary_slips (
+  id uuid primary key default uuid_generate_v4(),
+  employee_id uuid references employees(id),
+  month text not null,
+  year integer not null,
+  basic_salary numeric not null,
+  allowances numeric default 0,
+  deductions numeric default 0,
+  net_salary numeric not null,
+  created_at timestamp with time zone default now()
+);
+
+-- Enable Row Level Security
+alter table employees enable row level security;
+alter table departments enable row level security;
+alter table leave_requests enable row level security;
+alter table attendance enable row level security;
+alter table salary_slips enable row level security;
 ```
 
-See `APPLY_ALL_MIGRATIONS.md` for detailed instructions.
-
-5. **Set up Supabase Storage**
-
-**IMPORTANT:** Follow the instructions in `SETUP_SUPABASE_STORAGE.md` to enable document uploads.
-
-Quick steps:
-- Create "employee-documents" bucket (private)
-- Add storage policies
-- Takes 5 minutes
-
-6. **Run development server**
+5. **Run development server**
 ```bash
 bun run dev
+# or
+npm run dev
 ```
 
-7. **Open your browser**
+6. **Open your browser**
 Navigate to [http://localhost:3000](http://localhost:3000)
-
----
 
 ## 📁 Project Structure
 
 ```
-unrehrms/
-├── .same/                         # Documentation & tracking
-│   ├── todos.md                  # Implementation tracker
-│   ├── session-dec11-summary.md  # Latest session summary
-│   ├── comprehensive-hrms-plan.md # Full implementation plan
-│   └── database-schema-complete.md # Database documentation
+png-unre-hrms/
 ├── src/
-│   ├── app/
-│   │   ├── dashboard/
-│   │   │   ├── positions/        # NEW
-│   │   │   ├── recruitment/      # NEW (4 sub-pages)
-│   │   │   ├── training/         # NEW
-│   │   │   ├── performance/      # NEW
-│   │   │   ├── attendance/       # Enhanced (shifts, overtime)
-│   │   │   ├── employees/
-│   │   │   ├── leave/
-│   │   │   ├── payroll/
-│   │   │   ├── departments/
-│   │   │   └── reports/
-│   │   ├── page.tsx              # Landing page
-│   │   └── layout.tsx
+│   ├── app/                 # Next.js app directory
+│   │   ├── page.tsx        # Landing page
+│   │   ├── layout.tsx      # Root layout
+│   │   └── globals.css     # Global styles (PNG green theme)
 │   ├── components/
-│   │   ├── ui/                   # shadcn/ui components
-│   │   └── Sidebar.tsx           # Navigation
-│   ├── lib/
-│   │   ├── supabase.ts
-│   │   └── api/
-│   └── types/
-├── supabase/
-│   └── migrations/               # 8 migration files (001-008)
-├── SETUP_SUPABASE_STORAGE.md    # Storage setup guide
-└── package.json
+│   │   └── ui/             # Reusable UI components
+│   └── lib/
+│       ├── supabase.ts     # Supabase client
+│       └── utils.ts        # Utility functions
+├── public/                 # Static assets
+├── .env.local             # Environment variables (not in git)
+└── package.json           # Dependencies
 ```
 
----
-
-## 🗃️ Database Schema
-
-**60+ Tables** organized into modules:
-
-### Core Tables
-- employees, departments, positions
-- employment_types, academic_ranks, faculties
-
-### Recruitment
-- job_requisitions, job_postings, candidates
-- applications, interviews
-
-### Payroll
-- salary_structures, salary_components
-- pay_periods, pay_runs, payslips
-- png_tax_brackets, super_schemes
-- employee_salary_details
-
-### Time & Attendance
-- attendance, shifts, overtime_requests
-
-### Performance & Training
-- performance_goals, training_courses
-
-### Leave
-- leave_requests, leave_balances, leave_types
-
-### Documents
-- employee_documents, emergency_contacts
-
-See `.same/database-schema-complete.md` for full schema documentation.
-
----
-
-## 🎨 Design System
-
-### Brand Colors
+## 🎨 Brand Colors
 
 The application uses the official PNG University color palette:
 
 - **Primary Green**: #008751
 - **Light Green**: #00a86b
 - **Dark Green**: #006641
+- **Accent**: #1a9762
+- **Light Background**: #e8f5f0
 
-### Status Colors
-- **Blue**: New, Scheduled, Draft
-- **Yellow**: Pending, Screening
-- **Orange**: Interviewing, In Progress
-- **Purple**: Shortlisted, Offered
-- **Green**: Approved, Completed, Hired
-- **Red**: Rejected, Cancelled
+## 🔐 Environment Variables
 
-### UI Patterns
-- Stats dashboards (4-5 metrics per page)
-- Advanced filtering
-- Modal dialogs for forms
-- Toast notifications
-- Empty states with CTAs
-- Loading states
-- Badge status indicators
+Required environment variables:
 
----
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Your Supabase project URL | Yes |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anonymous key | Yes |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key | Yes |
+
+⚠️ **Never commit `.env.local` to version control!**
 
 ## 🚢 Deployment
 
 ### Deploy to Netlify
 
-1. Push to GitHub ✅ (Already done!)
-2. Connect repository to Netlify
-3. Add environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+1. Push your code to GitHub
+2. Connect your repository to Netlify
+3. Add environment variables in Netlify settings
 4. Deploy!
 
 ### Deploy to Vercel
 
-1. Import from GitHub
-2. Add environment variables
-3. Deploy!
+1. Push your code to GitHub
+2. Import project in Vercel
+3. Add environment variables
+4. Deploy!
 
-See `DEPLOYMENT.md` for detailed instructions.
+## 📊 Database Schema
 
----
+### Tables
 
-## 📝 Implementation Progress
-
-### ✅ Completed (45%)
-- Dashboard & navigation
-- 18 functional UI pages
-- 60+ database tables
-- Complete payroll system
-- Recruitment pipeline (requisitions → interviews)
-- Performance goals with cascading
-- Training course management
-- Time & attendance (shifts, overtime)
-- Document management system
-- Emergency contacts
-- PNG tax calculations
-- Superannuation tracking
-
-### ⏳ In Progress
-- Employee self-service portal
-- Manager self-service portal
-- Appraisals management
-- Timesheets
-- Benefits enrollment
-
-### 🎯 Planned
-- Onboarding workflows
-- Offboarding checklists
-- Safety incident reporting
-- Travel & expense management
-- Talent management
-- Complete authentication
-- Role-based access control
-- Mobile application
-
-**Target Completion:** September 2026 (9 months)
-**See:** `.same/comprehensive-hrms-plan.md` for full roadmap
-
----
-
-## 🔐 Security
-
-- ✅ Row Level Security (RLS) on all tables
-- ✅ Private storage bucket for documents
-- ✅ Signed URLs with time expiry
-- ✅ Authentication ready (Supabase Auth)
-- ✅ Access level controls
-- ✅ Audit trail logging
-- ⏳ Role-based permissions (in progress)
-
----
-
-## 📊 Statistics
-
-- **Total Files:** 180+ files
-- **Lines of Code:** ~15,000+ lines
-- **UI Pages:** 18 complete pages
-- **Database Tables:** 60+ tables
-- **Features:** 150+ individual features
-- **Migrations:** 8 migration files
-- **Documentation:** 15+ documentation files
-
----
+- **employees** - Staff records and information
+- **departments** - Organizational structure
+- **leave_requests** - Leave applications and approvals
+- **attendance** - Daily check-in/check-out records
+- **salary_slips** - Monthly payroll information
 
 ## 🔧 Development
 
 ### Adding new pages
 
-```bash
-# Example: Create a new dashboard page
-touch src/app/dashboard/new-page/page.tsx
+Create new pages in `src/app/`:
+
+```tsx
+// src/app/dashboard/page.tsx
+export default function Dashboard() {
+  return <div>Dashboard</div>
+}
 ```
 
 ### Adding UI components
 
-```bash
-# Use shadcn/ui CLI
-bunx shadcn@latest add -y -o button
-bunx shadcn@latest add -y -o card
-```
-
-### Running linter
+Use shadcn/ui components:
 
 ```bash
-bun run lint
+bunx shadcn@latest add -y -o [component-name]
 ```
 
-### Database migrations
+Available components: button, card, input, table, dialog, etc.
 
-1. Create new migration in `/supabase/migrations/`
-2. Name format: `00X_description.sql`
-3. Run in Supabase SQL Editor
+## 📝 TODO
 
----
-
-## 📚 Documentation
-
-- **Setup Guide:** `SETUP_SUPABASE_STORAGE.md`
-- **Deployment:** `DEPLOYMENT.md`
-- **Database:** `.same/database-schema-complete.md`
-- **Implementation Plan:** `.same/comprehensive-hrms-plan.md`
-- **Progress Tracker:** `.same/todos.md`
-- **Session Summary:** `.same/session-dec11-summary.md`
-- **GitHub Deployment:** `.same/github-deployment-summary.md`
-
----
+- [ ] Implement Supabase authentication
+- [ ] Build employee dashboard
+- [ ] Create admin panel
+- [ ] Add leave application form
+- [ ] Implement payroll processing
+- [ ] Generate PDF salary slips
+- [ ] Add email notifications
+- [ ] Build reporting dashboard
+- [ ] Implement role-based access control
+- [ ] Add audit logging
 
 ## 🤝 Contributing
 
-This is a private university system. For questions or issues:
+This is a private university system. For questions or issues, contact:
 
-- **Developer:** emabi2002@github.com
-- **HR Department:** hr@unre.ac.pg
-- **IT Support:** it-support@unre.ac.pg
-
----
+- **IT Department**: it-support@unre.ac.pg
+- **HRMS Admin**: hrms-admin@unre.ac.pg
+- **HR Department**: hr@unre.ac.pg
 
 ## 📄 License
 
 Proprietary - Papua New Guinea University of Natural Resources & Environment
 
----
-
 ## 🎓 About PNG UNRE
 
 Papua New Guinea University of Natural Resources & Environment is dedicated to excellence in education, research, and service in the fields of natural resources and environmental management.
 
-**Campus Location:** Vudal, East New Britain Province, Papua New Guinea
-**Website:** [unre.ac.pg](https://unre.ac.pg)
-**Established:** 1965
-
----
-
-## 🎯 Quick Links
-
-- **GitHub Repo:** https://github.com/emabi2002/unrehrms.git
-- **Supabase Project:** https://qltnmteqivrnljemyvvb.supabase.co
-- **Latest Deployment Summary:** `.same/github-deployment-summary.md`
-- **Full Implementation Plan:** `.same/comprehensive-hrms-plan.md`
+**Campus Location**: Vudal, East New Britain Province, Papua New Guinea
+**Website**: [unre.ac.pg](https://unre.ac.pg)
+**Established**: 1965
 
 ---
 
 **Built with 🌿 for PNG University**
-*Version 21.0 - December 11, 2025*
-*System Progress: 45% Complete*
+*Version 1.0.0 - December 2025*
